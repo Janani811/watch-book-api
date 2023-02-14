@@ -7,13 +7,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { SignInDto, SignUpDto } from './auth.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
-type UserCreateInput = {
-  email: string;
-  password: string;
-  first_name: string;
-  last_name: string;
-};
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -26,17 +19,24 @@ export class AuthService {
     const hashPass = await bcrypt.hash(dto.password, 10);
 
     try {
-      const user: UserCreateInput = await this.prisma.users.create({
+      const organisation: any = await this.prisma.org.create({
         data: {
-          email: dto.email,
-          password: hashPass,
-          first_name: dto.firstName,
-          last_name: dto.lastName,
+          org_name: dto.orgName,
+          org_address: dto.orgAddress,
+        },
+      });
+      const user: any = await this.prisma.orgUsers.create({
+        data: {
+          oga_email: dto.email,
+          oga_password: hashPass,
+          oga_name: dto.name,
+          oga_user_type: 1,
+          oga_org_id: organisation.org_id,
         },
       });
 
       delete user.password;
-      return user;
+      return { ...organisation, ...user };
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -48,26 +48,28 @@ export class AuthService {
   }
 
   async signin(dto: SignInDto) {
-    // find the user by email
-    const user: any = await this.prisma.users.findUnique({
+    const user: any = await this.prisma.orgUsers.findUnique({
       where: {
-        email: dto.email,
+        oga_email: dto.email,
+      },
+      include: {
+        organisation: true,
       },
     });
     // if user does not exist throw exception
     if (!user) throw new ForbiddenException('User Not Found');
 
     // compare password
-    const isMatch = await bcrypt.compare(dto.password, user.password);
+    const isMatch = await bcrypt.compare(dto.password, user.oga_password);
 
     // if password incorrect throw exception
     if (!isMatch) throw new ForbiddenException('Credentials incorrect');
     delete user.password;
-    const token = await this.signInToken(user);
-    return { user, token };
+    const jwtToken = await this.signInToken(user);
+    return { user, jwtToken };
   }
 
-  async signInToken(user): Promise<{ jwtToken: string }> {
+  async signInToken(user): Promise<string> {
     const secret = this.config.get('JWT_SECRET');
 
     const token = await this.jwtService.signAsync(user, {
@@ -75,8 +77,6 @@ export class AuthService {
       secret: secret,
     });
 
-    return {
-      jwtToken: token,
-    };
+    return token;
   }
 }

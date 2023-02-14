@@ -5,6 +5,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { UsersModule } from '../users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Global()
 @Module({
@@ -16,7 +17,7 @@ import { JwtModule } from '@nestjs/jwt';
       signOptions: { expiresIn: '8h' },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, PrismaService],
   exports: [AuthService],
 })
 export class AuthModule {}

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,19 +7,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Org {
+  org_id         Int        @id @default(autoincrement())
+  org_created_at DateTime   @default(now())
+  org_updated_at DateTime   @updatedAt
+  org_name       String
+  org_address    String
+  org_admin      OrgUsers[]
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  @@map("org")
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+model OrgUsers {
+  oga_id         Int      @id @default(autoincrement())
+  oga_created_at DateTime @default(now())
+  oga_updated_at DateTime @updatedAt
+  oga_email      String   @unique
+  oga_password   String
+  oga_name       String
+  oga_user_type  Int
+  oga_org_id     Int?
+  organisation   Org?     @relation(fields: [oga_org_id], references: [org_id])
+
+  @@map("org_admin")
+}
+
+model UserType {
+  ogut_id   Int    @id @default(autoincrement())
+  ogut_type String
+
+  @@map("org_user_type")
 }

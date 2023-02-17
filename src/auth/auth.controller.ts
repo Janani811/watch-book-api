@@ -31,11 +31,11 @@ export class AuthController {
   @Post('signin')
   async signin(@Body() dto: SignInDto, @Request() req, @Response() res) {
     try {
-      const { user, jwtToken }: any = await this.authService.signin(dto);
+      const { user, jwtToken }: any = await this.authService.signin(dto, res);
       req.user = user;
       return res.json({ status: 200, message: 'Signed In Successfully', jwtToken, user });
     } catch (error) {
-      return res.json({ error: error.message });
+      return res.status(403).json({ error: error.message });
     }
   }
 }

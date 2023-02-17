@@ -47,7 +47,7 @@ export class AuthService {
     }
   }
 
-  async signin(dto: SignInDto) {
+  async signin(dto: SignInDto, res) {
     const user: any = await this.prisma.orgUsers.findUnique({
       where: {
         oga_email: dto.email,
@@ -57,13 +57,15 @@ export class AuthService {
       },
     });
     // if user does not exist throw exception
-    if (!user) throw new ForbiddenException('User Not Found');
+    if (!user) {
+      throw new ForbiddenException('User not found');
+    }
 
     // compare password
     const isMatch = await bcrypt.compare(dto.password, user.oga_password);
 
     // if password incorrect throw exception
-    if (!isMatch) throw new ForbiddenException('Credentials incorrect');
+    if (!isMatch) throw new ForbiddenException('Your Credentials are incorrect');
     delete user.password;
     const jwtToken = await this.signInToken(user);
     return { user, jwtToken };

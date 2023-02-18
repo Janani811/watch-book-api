@@ -15,7 +15,35 @@ export class AuthService {
     private config: ConfigService,
   ) {}
 
+  async fetchProfile(id: number) {
+    const user: any = await this.prisma.orgUsers.findUnique({
+      where: {
+        oga_id: id,
+      },
+      include: {
+        organisation: true,
+      },
+    });
+    // if user does not exist throw exception
+    if (!user) {
+      throw new ForbiddenException('User not found');
+    }
+
+    delete user.password;
+    return { user };
+  }
+
   async signup(dto: SignUpDto) {
+    const user: any = await this.prisma.orgUsers.findUnique({
+      where: {
+        oga_email: dto.email,
+      },
+    });
+    // if user does not exist throw exception
+    if (user) {
+      throw new ForbiddenException('Organisation email already exists');
+    }
+
     const hashPass = await bcrypt.hash(dto.password, 10);
 
     try {
@@ -47,7 +75,7 @@ export class AuthService {
     }
   }
 
-  async signin(dto: SignInDto, res) {
+  async signin(dto: SignInDto) {
     const user: any = await this.prisma.orgUsers.findUnique({
       where: {
         oga_email: dto.email,

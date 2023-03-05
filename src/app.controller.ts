@@ -14,7 +14,7 @@ export class AppController {
   // }
   @Get()
   async getStr() {
-    return 'jbjhbjhb';
+    return 'Welcome to Watch Book';
   }
 
   // @UseGuards(JwtAuthGuard)

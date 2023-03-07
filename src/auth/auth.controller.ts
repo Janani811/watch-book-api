@@ -19,7 +19,6 @@ export class AuthController {
         },
       });
     } catch (error) {
-      console.log(error);
       return res.status(403).json({ error: error.message });
     }
   }
@@ -30,7 +29,6 @@ export class AuthController {
       await this.authService.signup(dto);
       return res.json({ status: 200, message: 'Signup Successfully completed' });
     } catch (error) {
-      console.log(error);
       return res.status(403).json({ error: error.message });
     }
   }
@@ -41,6 +39,16 @@ export class AuthController {
       const { user, jwtToken }: any = await this.authService.signin(dto);
       req.user = user;
       return res.json({ status: 200, message: 'Signed In Successfully', jwtToken, user });
+    } catch (error) {
+      return res.status(403).json({ error: error.message });
+    }
+  }
+
+  @Post('editprofile')
+  async editProfile(@Body() dto: any, @Response() res) {
+    try {
+      const { user } = await this.authService.editProfile(dto);
+      return res.json({ status: 200, message: 'Profile updated successfully', user });
     } catch (error) {
       return res.status(403).json({ error: error.message });
     }

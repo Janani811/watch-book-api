@@ -109,4 +109,36 @@ export class AuthService {
 
     return token;
   }
+
+  async editProfile(data: any) {
+    await this.prisma.orgUsers.update({
+      where: {
+        oga_id: data?.orgAdminId,
+      },
+      data: {
+        oga_name: data?.name,
+        oga_email: data?.email,
+      },
+    });
+    await this.prisma.org.update({
+      where: {
+        org_id: data?.orgId,
+      },
+      data: {
+        org_name: data?.orgName,
+        org_address: data?.orgAddress,
+      },
+    });
+
+    const user: any = await this.prisma.orgUsers.findUnique({
+      where: {
+        oga_id: data?.orgAdminId,
+      },
+      include: {
+        organisation: true,
+      },
+    });
+    delete user.password;
+    return { user };
+  }
 }

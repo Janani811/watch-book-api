@@ -1,4 +1,5 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { KnexModule } from 'nest-knexjs';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
@@ -12,6 +13,18 @@ import { AuthController } from './auth/auth.controller';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    KnexModule.forRoot({
+      config: {
+        client: 'mysql',
+        useNullAsDefault: true,
+        connection: {
+          host: '127.0.0.1',
+          user: 'root',
+          password: 'password',
+          database: 'watchbook',
+        },
+      },
     }),
     PrismaModule,
     AuthModule,

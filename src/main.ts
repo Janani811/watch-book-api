@@ -17,6 +17,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  await app.listen(7000);
+  await app.listen(+process.env.PORT || 7000);
 }
 bootstrap();

@@ -18,9 +18,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "knex:migrate": "npx knex migrate:latest",
-    "knex:seed": "npx knex seed:run",
-    "migrate:rollback": "knex migrate:rollback --all"
+    "migrate:latest": "knex migrate:latest --knexfile database/knexfile.js",
+    "seed": "knex seed:run --knexfile database/knexfile.js",
+    "migrate:rollback": "knex migrate:rollback --all --knexfile database/knexfile.js"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
@@ -36,6 +36,7 @@
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "dotenv": "^16.0.3",
     "knex": "^2.4.2",
     "mysql": "^2.18.1",
     "nest-knexjs": "^0.0.14",

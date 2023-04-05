@@ -11,7 +11,7 @@ export class AuthController {
   @Get('getprofile')
   async getProfile(@Request() req, @Response() res) {
     try {
-      const { user } = await this.authService.fetchProfile(req.user.oga_id);
+      const { user } = await this.authService.fetchProfile(req.user.us_id);
       res.status(200).json({
         status: true,
         user: {
@@ -29,6 +29,7 @@ export class AuthController {
       await this.authService.signup(dto);
       return res.json({ status: 200, message: 'Signup Successfully completed' });
     } catch (error) {
+      console.log(error);
       return res.status(403).json({ error: error.message });
     }
   }

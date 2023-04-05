@@ -5,7 +5,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
-import { AuthController } from './auth/auth.controller';
+// import { AuthController } from './auth/auth.controller';
 import { AppLoggerModule } from './logger/logger.module';
 import { KnexConfigModule } from './knex-config/knex-config.module';
 
@@ -14,14 +14,13 @@ import { KnexConfigModule } from './knex-config/knex-config.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-
     AppLoggerModule,
     PrismaModule,
     AuthModule,
     UsersModule,
     KnexConfigModule,
   ],
-  controllers: [AppController, AuthController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

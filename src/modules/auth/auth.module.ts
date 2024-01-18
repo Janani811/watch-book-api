@@ -5,9 +5,9 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthController } from './controllers/auth.controller';
 import { AuthMiddleware } from '../../common/middleware/auth.middleware';
 import { AuthService } from './service/auth.service';
-import { Users } from 'src/database/entities/users.entity';
+import { Users } from '../../database/entities/users.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Organisations } from 'src/database/entities/oraganisation.entity';
+import { Organisations } from '../../database/entities/oraganisation.entity';
 import { UsersRepository } from './repository/user.repository';
 
 @Global()

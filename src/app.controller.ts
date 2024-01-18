@@ -1,12 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
-import { AuthService } from './auth/auth.service';
+import { ConfigService } from '@nestjs/config';
 
 @Controller()
 export class AppController {
-  constructor(private authService: AuthService) {}
+  constructor(private configService: ConfigService) {}
 
   @Get()
-  async getStr() {
+  getHello() {
     return 'Welcome to Watch Book';
   }
 }

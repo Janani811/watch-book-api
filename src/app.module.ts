@@ -1,26 +1,29 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PrismaModule } from './prisma/prisma.module';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
+
 import { ConfigModule } from '@nestjs/config';
-// import { AuthController } from './auth/auth.controller';
-import { AppLoggerModule } from './logger/logger.module';
-import { KnexConfigModule } from './knex-config/knex-config.module';
+
+import { AppLoggerModule } from './common/middleware/logger/logger.module';
+
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { AuthModule } from './modules/auth/auth.module';
+import appConfig from './config/app.config';
+import { dataSourceOptions } from './config/typeorm.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [appConfig],
     }),
+    TypeOrmModule.forRoot(dataSourceOptions),
     AppLoggerModule,
-    PrismaModule,
     AuthModule,
-    UsersModule,
-    KnexConfigModule,
   ],
   controllers: [AppController],
   providers: [AppService],
+  exports: [],
 })
 export class AppModule {}

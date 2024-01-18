@@ -28,9 +28,10 @@ export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes(
-        { path: 'auth/getprofile', method: RequestMethod.GET },
-        { path: 'auth/edit-profile', method: RequestMethod.PUT },
-      );
+      .exclude(
+        { path: 'auth/login', method: RequestMethod.POST },
+        { path: 'auth/signup', method: RequestMethod.POST },
+      )
+      .forRoutes(AuthController);
   }
 }

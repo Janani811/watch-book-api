@@ -11,9 +11,9 @@ import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { SignInDto, SignUpDto, UpdateUserDto } from '../dto/auth.dto';
-import { Users } from 'src/database/entities/users.entity';
+import { Users } from '../../../database/entities/users.entity';
 
-import { Organisations } from 'src/database/entities/oraganisation.entity';
+import { Organisations } from '../../../database/entities/oraganisation.entity';
 import { UsersRepository } from '../repository/user.repository';
 
 @Injectable()

@@ -97,6 +97,7 @@ export class AuthService {
         { ...user },
         {
           secret: secret,
+          expiresIn: process.env.JWT_EXPIRY,
         },
       );
       return token;

@@ -2,9 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { json, urlencoded } from 'express';
-import { config } from 'dotenv';
-
-config();
+import { IoAdapter } from '@nestjs/platform-socket.io';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +10,7 @@ async function bootstrap() {
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
+  app.useWebSocketAdapter(new IoAdapter(app));
   app.use(json());
   app.use(urlencoded({ extended: false }));
   app.useGlobalPipes(
@@ -20,6 +19,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  await app.listen(+process.env.PORT || 7000);
+  await app.listen(+process.env.PORT || 7000, () => {
+    console.log('listening on port ' + process.env.PORT);
+  });
 }
 bootstrap();

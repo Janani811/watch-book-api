@@ -12,12 +12,15 @@ import { AuthModule } from './modules/auth/auth.module';
 import appConfig from './config/app.config';
 import { dataSourceOptions } from './config/typeorm.config';
 
+import { SocketModule } from './modules/socket/socket.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig],
     }),
+    SocketModule,
     TypeOrmModule.forRoot(dataSourceOptions),
     AppLoggerModule,
     AuthModule,

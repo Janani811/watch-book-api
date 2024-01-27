@@ -21,7 +21,11 @@ import { WsJwtGuard } from '../socket-jwt.guard';
   namespace: '/events',
   cors: {
     origin: '*',
+    methods: ["GET", "POST"],
+    credentials: true,
+    transports: ['websocket', 'polling'],
   },
+   allowEIO3: true,
 })
 export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
